@@ -1,9 +1,9 @@
 <script lang="ts">
-	
+	import Theme from "./components/Theme.svelte"
 </script>
 
 <main>
-	<h1>Hello World</h1>
+	<Theme />
 </main>
 
 <style style="scss">
