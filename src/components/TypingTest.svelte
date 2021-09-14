@@ -1,8 +1,13 @@
 <script lang='ts'>
 	import english from "../languages/englishWords"
 
-	const words = getRandomWords(20)
+	interface char {
+		char: string,
+		hit: boolean,
+		error: boolean
+	}
 
+	let words: char[][] = getRandomWords(20)
 	let charIdx = 0
 	let wordIdx = 0
 
@@ -38,24 +43,47 @@
 		return array
 	}
 
+	function reset() {
+		[charIdx, wordIdx] = [0, 0]
+		words = getRandomWords(20)
+	}
+
 	function handleKeydown(e: KeyboardEvent): void {
-		if (e.key === words[wordIdx][charIdx].char) {
-			words[wordIdx][charIdx].hit = true
-			
-			if (charIdx + 1 !== words[wordIdx].length) {
-				charIdx++
-			} else if (wordIdx + 1 !== words.length) {
-				wordIdx++
-				charIdx = 0
-			}
-		} else {
-			words[wordIdx].splice(charIdx, 0, {
-				char: e.key, hit: false, error: true
-			})
-			charIdx++
-			words = words
+		switch(e.key) {
+			case "Tab":
+				e.preventDefault()
+				reset()
+				break
+			default:
+				if (e.key === words[wordIdx][charIdx].char) {
+					words[wordIdx][charIdx].hit = true
+					
+					if (charIdx + 1 !== words[wordIdx].length) {
+						charIdx++
+					} else if (wordIdx + 1 !== words.length) {
+						wordIdx++
+						charIdx = 0
+					}
+				} else {
+					words[wordIdx].splice(charIdx, 0, {
+						char: e.key, hit: false, error: true
+					})
+					charIdx++
+					words = words
+				}
 		}
 	}
+
+	// TODO
+	// - MOVE AND HIGHLIGHT CURRENT CHAR
+	// - ADD CURSOR
+	// - DISPLAY STATS WHILE TYPING 
+	// - ADD END SCREEN
+	// - ADD SETTINGS
+	//		- ADD TOP WORDS
+	// 		- ADD LANGUAGES
+	//		- (ADD THEMES)
+	// - LIGHTHOUSE
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
