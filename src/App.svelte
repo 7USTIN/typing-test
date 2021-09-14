@@ -14,6 +14,7 @@
 		--second-bg: #f8f9fa;
 		--text: #151515;
 		--second-text: #59595a;
+		--error-text: 235, 87, 87;
 		--border: #e4e4e4;
 	}
 
@@ -22,6 +23,7 @@
 		--second-bg: #1c1c1c;
 		--text: #ffffff;
 		--second-text: #adadad;
+		--error-text: 235, 87, 87;
 		--border: #333333;
 	}
 

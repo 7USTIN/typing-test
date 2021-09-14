@@ -23,12 +23,15 @@
 
 			for (let j = 0; j < words[i].length; j++) {
 				array[i].push({
-					char: words[i][j],
-					hit: false,
+					char: words[i][j], hit: false, error: false,
 				})
 			}
-
-			array[i].push({ char: " ", hit: false })
+			
+			if (i + 1 !== numWords) {
+				array[i].push({
+					char: " ", hit: false, error: false 
+				})
+			}
 		}
 
 		console.log(array)
@@ -41,10 +44,16 @@
 			
 			if (charIdx + 1 !== words[wordIdx].length) {
 				charIdx++
-			} else {
+			} else if (wordIdx + 1 !== words.length) {
 				wordIdx++
 				charIdx = 0
 			}
+		} else {
+			words[wordIdx].splice(charIdx, 0, {
+				char: e.key, hit: false, error: true
+			})
+			charIdx++
+			words = words
 		}
 	}
 </script>
@@ -52,10 +61,10 @@
 <svelte:window on:keydown={handleKeydown} />
 
 <section>
-	{#each words as word, idx (idx)}
+	{#each words as word, wIdx (wIdx)}
 		<p>
-			{#each word as {char, hit}, idx (idx)}
-				<span class:hit class="char">
+			{#each word as {char, hit, error}, cIdx (cIdx)}
+				<span class:hit class:error class="char">
 					{#if char === " "}
 						&nbsp 
 					{:else}
@@ -85,6 +94,11 @@
 
 		.hit {
 			color: var(--text) !important;
+		}
+
+		.error {
+			color: rgb(var(--error-text)) !important;
+			background: rgba( var(--error-text), 0.1);
 		}
 	}
 </style>
