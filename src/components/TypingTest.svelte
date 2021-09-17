@@ -10,7 +10,7 @@
 		next: boolean
 	}
 
-	let words: char[][] = getRandomWords(20)
+	let words: char[][] = getRandomWords(2)
 
 	let typingTestEl: HTMLDivElement
 	let wrapperEl: HTMLDivElement
@@ -85,9 +85,12 @@
 		if (e.key === "Tab") {
 			e.preventDefault()
 			reset()
+		}
+		
+		if (e.key.length !== 1) {
 			return 
 		}
-
+		
 		if (e.key === words[wordIdx][charIdx].char) {
 			words[wordIdx][charIdx].hit = true
 			words[wordIdx][charIdx].current = false
@@ -104,21 +107,23 @@
 			
 			if (words[wordIdx][charIdx].char !== " ") {
 				words[wordIdx][charIdx].next = false
-
-				if (wordIdx + 1 !== words.length) {
+								
+				if (words[wordIdx][charIdx + 1]) {
 					words[wordIdx][charIdx + 1].next = true
 				}
 			} else {
 				words[wordIdx][0].next = false
 				words[wordIdx + 1][0].next = true
 			}
-		} else if (e.key.length === 1) {
+		} else {
 			words[wordIdx].splice(charIdx, 0, pushChar(e.key, true))
 			charIdx++
 			words = words
 		}
 
-		charOffset += nextChar[0].scrollWidth
+		if (nextChar[0]){
+			charOffset += currentChar[0].scrollWidth / 2 + nextChar[0].scrollWidth / 2
+		}
 		setOffset()
 	}
 </script>
@@ -218,6 +223,7 @@
 					user-select: none;
 					-moz-user-select: none;
 					-webkit-user-select: none;
+					font-weight: 400;
 				}
 		
 				.hit {
@@ -230,7 +236,7 @@
 				}
 	
 				.current {
-					font-weight: 700;
+					font-weight: 900;
 				}
 			}
 		}

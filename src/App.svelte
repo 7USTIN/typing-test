@@ -39,7 +39,7 @@
 	}
 
 	:global(body, button, input) {
-		font-family: "Inter", sans-serif;
+		font-family: "JetBrains Mono", sans-serif;
 		font-size: 14px;
 		background: var(--bg);
 		color: var(--text);
