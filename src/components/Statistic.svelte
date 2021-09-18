@@ -17,14 +17,15 @@
 
 <style lang='scss'>
 	.wrapper {
-		padding: 12px 16px;
-		width: 120px;
+		margin: 12px 10px;
+		width: 100px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 
 		h2 {
 			font-size: 22px;
+			height: 29px;
 		}
 
 		.line {
@@ -32,6 +33,7 @@
 			height: 1px;
 			width: 100%;
 			background: var(--second-text);
+			opacity: 0.5;
 		}
 
 		p {

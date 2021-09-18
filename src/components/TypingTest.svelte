@@ -11,7 +11,7 @@
 		next: boolean
 	}
 
-	let words: char[][] = getRandomWords(20)
+	let words: char[][] = getRandomWords(100)
 
 	let typingTestEl: HTMLDivElement
 	let wrapperEl: HTMLDivElement
@@ -21,17 +21,24 @@
 	let wordIdx = 0
 
 	let stats = {
-		time: { name: "time", value: 0, stop: false },
-		signs: { name: "signs", value: 0 },
+		time: { name: "time", value: 0, stop: true },
+		chars: { name: "characters", value: 0 },
 		wpm: { name: "words/min", value: 0 },
 		errors: { name: "errors", value: 0 },
-		errorRate: { name: "error rate", value: 0 },
-		lastKey: { name: "last key", value: 0 },
+		errorRate: { name: "error rate", value: "0%" },
+		lastKey: { name: "last key", value: "" },
 	}
-	$: stats.wpm.value = Math.floor((stats.signs.value / 5) / (stats.time.value / 60)) || 0
 
 	$: currentChar = document.getElementsByClassName("current")
 	$: nextChar = document.getElementsByClassName("next")
+
+	setInterval(() => {
+		if (!stats.time.stop) {
+			stats.time.value++
+			stats.wpm.value = Math.floor((stats.chars.value / 5) / (stats.time.value / 60))
+		}
+	}, 1000) 
+	
 
 	function setOffset(): void {
 		typingTestEl.style.left = wrapperEl.clientWidth / 2 - charOffset + "px"
@@ -82,20 +89,16 @@
 		return array
 	}
 
-	function incrementTime(): void {
-		if (!stats.time.stop) {
-			stats.time.value++
-
-			setTimeout(incrementTime, 1000)
-		}
-	}
-
 	async function reset(): Promise<void> {
 		[charIdx, wordIdx] = [0, 0]
 		words = getRandomWords(20)
-		stats.time.stop = true
 		stats.time.value = 0
-		stats.signs.value = 0
+		stats.time.stop = true
+		stats.chars.value = 0
+		stats.wpm.value = 0
+		stats.errors.value = 0
+		stats.errorRate.value = "0%"
+		stats.lastKey.value = ""
 
 		await tick()
 
@@ -103,7 +106,7 @@
 		setOffset()
 	}
 
-	function handleKeydown(e: KeyboardEvent): void {
+	function handleKeydown(e: KeyboardEvent): void {	
 		if (e.key === "Tab") {
 			e.preventDefault()
 			reset()
@@ -112,17 +115,15 @@
 		if (e.key.length !== 1) {
 			return 
 		}
-
-		stats.time.stop = false
-		if (stats.time.value === 0) {
-			incrementTime()
-		}
 		
+		stats.time.stop = false
+		stats.lastKey.value = e.key
+
 		if (e.key === words[wordIdx][charIdx].char) {
 			words[wordIdx][charIdx].hit = true
 			words[wordIdx][charIdx].current = false
 
-			stats.signs.value++
+			stats.chars.value++
 			
 			if (charIdx + 1 !== words[wordIdx].length) {
 				charIdx++
@@ -148,7 +149,11 @@
 			words[wordIdx].splice(charIdx, 0, pushChar(e.key, true))
 			charIdx++
 			words = words
+			stats.errors.value++
 		}
+		
+		const errorRate = (stats.errors.value / stats.chars.value) * 100
+		stats.errorRate.value = errorRate > 100 ? "100%" : !errorRate ? "0%" : errorRate.toFixed(2) + "%"
 
 		if (nextChar[0]){
 			charOffset += currentChar[0].scrollWidth / 2 + nextChar[0].scrollWidth / 2
