@@ -16,6 +16,12 @@
 			{theme === "dark" ? "light_mode" : "dark_mode"}
 		</i>
 	</button>
+
+	<a href="https://github.com/7USTIN/typing-test" target="_blank">
+		<button>
+			<i class="material-icons">code</i>
+		</button>
+	</a>
 </section>
 
 <style lang='scss'>

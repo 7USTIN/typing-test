@@ -1,5 +1,6 @@
 <script lang='ts'>
 	import { onMount, tick } from "svelte"
+	import Statistic from "./Statistic.svelte"
 	import english from "../languages/englishWords"
 
 	interface char {
@@ -10,7 +11,7 @@
 		next: boolean
 	}
 
-	let words: char[][] = getRandomWords(2)
+	let words: char[][] = getRandomWords(20)
 
 	let typingTestEl: HTMLDivElement
 	let wrapperEl: HTMLDivElement
@@ -161,6 +162,15 @@
 		<div class="fade right" />
 	</div>
 
+	<div class="stats">
+		<Statistic name="time" value="0" />
+		<Statistic name="signs" value="0" />
+		<Statistic name="words/min." value="0" />
+		<Statistic name="errors" value="0" />
+		<Statistic name="error rate" value="0" />
+		<Statistic name="last key" value="0" />
+	</div>
+
 	<div class="tips">
 		<key>tab</key>
 		- restart test
@@ -172,6 +182,7 @@
 		width: 100vw;
 		height: 100vh;
 		display: flex; 
+		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 
@@ -185,7 +196,7 @@
 				content: "";
 				position: absolute;
 				left: 50%;
-				top: calc(50% + 15px);
+				top: calc(50% + 20px);
 				transform: translate(-50%, -50%);
 				width: 0; 
 				height: 0; 
@@ -239,6 +250,10 @@
 					font-weight: 900;
 				}
 			}
+		}
+
+		.stats {
+			display: flex;
 		}
 
 		.tips {
