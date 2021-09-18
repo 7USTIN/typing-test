@@ -1,10 +1,16 @@
 <script lang='ts'>
 	export let name: string
-	export let value: string
+	export let value: string | number
+
+	function formatTime(s: number): string {
+		return ((s-(s%=60))/60+(9<s?':':':0')+s).padStart(5, "0")
+	}
 </script>
 
 <div class="wrapper">
-	<h2>{value}</h2>
+	<h2>
+		{name === "time" ? formatTime(+value) : value}
+	</h2>
 	<div class="line" />
 	<p>{name}</p>
 </div>

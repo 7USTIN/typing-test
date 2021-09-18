@@ -20,10 +20,20 @@
 	let charIdx = 0
 	let wordIdx = 0
 
+	let stats = {
+		time: { name: "time", value: 0, stop: false },
+		signs: { name: "signs", value: 0 },
+		wpm: { name: "words/min", value: 0 },
+		errors: { name: "errors", value: 0 },
+		errorRate: { name: "error rate", value: 0 },
+		lastKey: { name: "last key", value: 0 },
+	}
+	$: stats.wpm.value = Math.floor((stats.signs.value / 5) / (stats.time.value / 60)) || 0
+
 	$: currentChar = document.getElementsByClassName("current")
 	$: nextChar = document.getElementsByClassName("next")
-	
-	function setOffset() {
+
+	function setOffset(): void {
 		typingTestEl.style.left = wrapperEl.clientWidth / 2 - charOffset + "px"
 	}
 
@@ -72,9 +82,20 @@
 		return array
 	}
 
-	async function reset() {
+	function incrementTime(): void {
+		if (!stats.time.stop) {
+			stats.time.value++
+
+			setTimeout(incrementTime, 1000)
+		}
+	}
+
+	async function reset(): Promise<void> {
 		[charIdx, wordIdx] = [0, 0]
 		words = getRandomWords(20)
+		stats.time.stop = true
+		stats.time.value = 0
+		stats.signs.value = 0
 
 		await tick()
 
@@ -91,10 +112,17 @@
 		if (e.key.length !== 1) {
 			return 
 		}
+
+		stats.time.stop = false
+		if (stats.time.value === 0) {
+			incrementTime()
+		}
 		
 		if (e.key === words[wordIdx][charIdx].char) {
 			words[wordIdx][charIdx].hit = true
 			words[wordIdx][charIdx].current = false
+
+			stats.signs.value++
 			
 			if (charIdx + 1 !== words[wordIdx].length) {
 				charIdx++
@@ -163,12 +191,9 @@
 	</div>
 
 	<div class="stats">
-		<Statistic name="time" value="0" />
-		<Statistic name="signs" value="0" />
-		<Statistic name="words/min." value="0" />
-		<Statistic name="errors" value="0" />
-		<Statistic name="error rate" value="0" />
-		<Statistic name="last key" value="0" />
+		{#each Object.values(stats) as {name, value}, sIdx (sIdx)}
+			<Statistic {name} {value} />
+		{/each}
 	</div>
 
 	<div class="tips">
