@@ -22,10 +22,31 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		
+		@media screen and (max-width: 1500px) {
+			width: 90px;
+			margin: 12px 9px;
+		}
 
+		@media screen and (max-width: 1000px) {
+			width: 80px;
+			margin: 12px 8px;
+
+		}
+		
 		h2 {
 			font-size: 22px;
 			height: 29px;
+
+			@media screen and (max-width: 1500px) {
+				font-size: 20px;
+				height: 27px;
+			}
+			
+			@media screen and (max-width: 1000px) {
+				font-size: 18px;
+				height: 25px;			
+			}
 		}
 
 		.line {
@@ -34,11 +55,27 @@
 			width: 100%;
 			background: var(--second-text);
 			opacity: 0.5;
+
+			@media screen and (max-width: 1500px) {
+				margin: 7px 0;
+			}
+
+			@media screen and (max-width: 1000px) {
+				margin: 6px 0;
+			}
 		}
 
 		p {
 			color: var(--second-text);
 			font-size: 13px;
+
+			@media screen and (max-width: 1500px) {
+				font-size: 12px;
+			}
+
+			@media screen and (max-width: 1000px) {
+				font-size: 11px;
+			}
 		}
 	}
 </style>

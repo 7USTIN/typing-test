@@ -7,11 +7,10 @@
 		char: string,
 		hit: boolean,
 		error: boolean,
-		current: boolean,
-		next: boolean
+		current: boolean
 	}
 
-	let words: char[][] = getRandomWords(100)
+	let words: char[][] = getRandomWords(20)
 
 	let typingTestEl: HTMLDivElement
 	let wrapperEl: HTMLDivElement
@@ -30,7 +29,6 @@
 	}
 
 	$: currentChar = document.getElementsByClassName("current")
-	$: nextChar = document.getElementsByClassName("next")
 
 	setInterval(() => {
 		if (!stats.time.stop) {
@@ -59,7 +57,6 @@
 			error,
 			hit: false,
 			current: false,
-			next: false,
 		}
 	}
 
@@ -83,7 +80,6 @@
 			}
 			
 			array[0][0].current = true
-			array[0][1].next = true
 		}
 
 		return array
@@ -133,18 +129,6 @@
 			}
 			
 			words[wordIdx][charIdx].current = true
-			words[wordIdx][charIdx].next = false
-			
-			if (words[wordIdx][charIdx].char !== " ") {
-				words[wordIdx][charIdx].next = false
-								
-				if (words[wordIdx][charIdx + 1]) {
-					words[wordIdx][charIdx + 1].next = true
-				}
-			} else {
-				words[wordIdx][0].next = false
-				words[wordIdx + 1][0].next = true
-			}
 		} else {
 			words[wordIdx].splice(charIdx, 0, pushChar(e.key, true))
 			charIdx++
@@ -153,11 +137,9 @@
 		}
 		
 		const errorRate = (stats.errors.value / stats.chars.value) * 100
-		stats.errorRate.value = errorRate > 100 ? "100%" : !errorRate ? "0%" : errorRate.toFixed(2) + "%"
+		stats.errorRate.value = errorRate >= 100 ? "100%" : !errorRate ? "0%" : errorRate.toFixed(2) + "%"
 
-		if (nextChar[0]){
-			charOffset += currentChar[0].scrollWidth / 2 + nextChar[0].scrollWidth / 2
-		}
+		charOffset += currentChar[0].scrollWidth
 		setOffset()
 	}
 </script>
@@ -172,14 +154,8 @@
 		>
 			{#each words as word, wIdx (wIdx)}
 				<p>
-					{#each word as {char, hit, error, current, next}, cIdx (cIdx)}
-						<span
-							class:hit
-							class:error
-							class:current
-							class:next
-							class="char"
-						>
+					{#each word as {char, hit, error, current}, cIdx (cIdx)}
+						<span class:hit class:error class:current class="char">
 							{#if char === " "}
 								&nbsp 
 							{:else}
@@ -221,6 +197,18 @@
 			width: 50%;
 			height: 100px;
 			overflow: hidden;
+
+			@media screen and (max-width: 1500px) {
+				width: 60%;
+			}
+
+			@media screen and (max-width: 1000px) {
+				width: 80%;
+			}
+
+			@media screen and (max-width: 500px) {
+				width: 95%;
+			}
 
 			&::after {
 				content: "";
@@ -284,18 +272,29 @@
 
 		.stats {
 			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
 		}
 
 		.tips {
 			position: fixed;
-			bottom: 72px;
+			bottom: 80px;
 			font-size: 15px;
+
+			@media screen and (max-width: 1500px) {
+				font-size: 14px;
+				bottom: 72px;
+			}
 
 			key {
 				background: var(--text);
 				color: var(--bg);
 				padding: 1px 5px;
 				font-size: 14px;
+
+				@media screen and (max-width: 1500px) {
+					font-size: 13px;
+				}
 			}
 		}
 	}
