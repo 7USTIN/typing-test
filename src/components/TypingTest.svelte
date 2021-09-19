@@ -12,6 +12,7 @@
 
 	let words: char[][] = getRandomWords(20)
 
+	let inputEl: HTMLInputElement
 	let typingTestEl: HTMLDivElement
 	let wrapperEl: HTMLDivElement
 	let charOffset = 0
@@ -36,28 +37,17 @@
 			stats.wpm.value = Math.floor((stats.chars.value / 5) / (stats.time.value / 60))
 		}
 	}, 1000) 
-	
-
-	function setOffset(): void {
-		typingTestEl.style.left = wrapperEl.clientWidth / 2 - charOffset + "px"
-	}
 
 	onMount(() => {
 		charOffset = currentChar[0].scrollWidth / 2
 		setOffset()
+
+		inputEl.addEventListener("paste", (e) => e.preventDefault())
+		inputEl.addEventListener("copy", (e) => e.preventDefault())
 	})
-
-	function getRandomItem(array: any[]): [] {
-		return array[array.length * Math.random() | 0]
-	}
-
-	function pushChar(char: string, error: boolean): char {
-		return {
-			char,
-			error,
-			hit: false,
-			current: false,
-		}
+	
+	function setOffset(): void {
+		typingTestEl.style.left = wrapperEl.clientWidth / 2 - charOffset + "px"
 	}
 
 	function getRandomWords(numWords: number): [][] {
@@ -65,20 +55,24 @@
 		const words = []
 
 		for (let i = 0; i < numWords; i++) {
-			words.push(getRandomItem(english.TOP_200))
+			words.push(english.TOP_200[english.TOP_200.length * Math.random() | 0])
 		}
 
 		for (let i = 0; i < numWords; i++) {
 			array.push([])
 
 			for (let j = 0; j < words[i].length; j++) {
-				array[i].push(pushChar(words[i][j], false))
+				array[i].push({
+					char: words[i][j], error: false, hit: false, current: false,
+				})
 			}
 			
 			if (i + 1 !== numWords) {
-				array[i].push(pushChar(" ", false))
+				array[i].push({
+					char: " ", error: false, hit: false, current: false,
+				})
 			}
-			
+
 			array[0][0].current = true
 		}
 
@@ -88,6 +82,7 @@
 	async function reset(): Promise<void> {
 		[charIdx, wordIdx] = [0, 0]
 		words = getRandomWords(20)
+		
 		stats.time.value = 0
 		stats.time.stop = true
 		stats.chars.value = 0
@@ -130,7 +125,9 @@
 			
 			words[wordIdx][charIdx].current = true
 		} else {
-			words[wordIdx].splice(charIdx, 0, pushChar(e.key, true))
+			words[wordIdx].splice(charIdx, 0, {
+				char: e.key, error: true, hit: false, current: false,
+			})
 			charIdx++
 			words = words
 			stats.errors.value++
@@ -148,10 +145,7 @@
 
 <section>
 	<div class="typing-test-wrapper" bind:this={wrapperEl}>
-		<div 
-			class="typing-test" 
-			bind:this={typingTestEl}
-		>
+		<div class="typing-test" bind:this={typingTestEl}>
 			{#each words as word, wIdx (wIdx)}
 				<p>
 					{#each word as {char, hit, error, current}, cIdx (cIdx)}
@@ -166,9 +160,11 @@
 				</p>
 			{/each}
 		</div>
-
+		
 		<div class="fade left" />
 		<div class="fade right" />
+		
+		<input bind:this={inputEl} />
 	</div>
 
 	<div class="stats">
@@ -197,6 +193,7 @@
 			width: 50%;
 			height: 100px;
 			overflow: hidden;
+			pointer-events: none;
 
 			@media screen and (max-width: 1500px) {
 				width: 60%;
@@ -208,6 +205,20 @@
 
 			@media screen and (max-width: 500px) {
 				width: 95%;
+			}
+
+			input {
+				background: transparent;
+				color: transparent;
+				border: none;
+				opacity: 0;
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				top: 0;
+				left: 0;
+				pointer-events: auto;
+				cursor: default;
 			}
 
 			&::after {
@@ -233,11 +244,15 @@
 			.left {
 				left: 0;
 				background: linear-gradient(to right, var(--bg) , transparent);
+				background: -webkit-linear-gradient(to right, var(--bg) , transparent);
+				background: -moz-linear-gradient(to right, var(--bg) , transparent);
 			}
 
 			.right {
 				right: 0;
 				background: linear-gradient(to left, var(--bg) , transparent);
+				background: -webkit-linear-gradient(to left, var(--bg) , transparent);
+				background: -moz-linear-gradient(to left, var(--bg) , transparent);
 			}
 
 			.typing-test {
