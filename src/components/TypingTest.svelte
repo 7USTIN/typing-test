@@ -10,15 +10,16 @@
 		current: boolean
 	}
 
-	let words: char[][] = getRandomWords(20)
-
 	let inputEl: HTMLInputElement
 	let typingTestEl: HTMLDivElement
 	let wrapperEl: HTMLDivElement
+	
 	let charOffset = 0
-
 	let charIdx = 0
 	let wordIdx = 0
+	let progress = 0
+
+	let words: char[][] = getRandomWords(2)
 
 	let stats = {
 		time: { name: "time", value: 0, stop: true },
@@ -30,11 +31,12 @@
 	}
 
 	$: currentChar = document.getElementsByClassName("current")
+	$: stats.wpm.value = !stats.time.value ? 0 : Math.floor((stats.chars.value / 5) / (stats.time.value / 60))
 
 	setInterval(() => {
 		if (!stats.time.stop) {
 			stats.time.value++
-			stats.wpm.value = Math.floor((stats.chars.value / 5) / (stats.time.value / 60))
+			getProgress()
 		}
 	}, 1000) 
 
@@ -79,8 +81,19 @@
 		return array
 	}
 
+	function getProgress(): void {
+		// LOGIC HERE
+		
+		if (progress === 100) {
+			charOffset -= currentChar[0]?.scrollWidth || 0
+			setOffset()
+			words[wordIdx][charIdx].current = false
+			stats.time.stop = true
+		}
+	}
+
 	async function reset(): Promise<void> {
-		[charIdx, wordIdx] = [0, 0]
+		[charIdx, wordIdx, progress] = [0, 0, 0]
 		words = getRandomWords(20)
 		
 		stats.time.value = 0
@@ -103,7 +116,7 @@
 			reset()
 		}
 		
-		if (e.key.length !== 1) {
+		if (e.key.length !== 1 || progress === 100) {
 			return 
 		}
 		
@@ -138,6 +151,7 @@
 
 		charOffset += currentChar[0].scrollWidth
 		setOffset()
+		getProgress()
 	}
 </script>
 
@@ -160,7 +174,12 @@
 				</p>
 			{/each}
 		</div>
-		
+
+		<div class="progress-bar">
+			<div class="progress" />
+			<p>64%</p>
+		</div>
+
 		<div class="fade left" />
 		<div class="fade right" />
 		
@@ -173,7 +192,7 @@
 		{/each}
 	</div>
 
-	<div class="tips">
+	<div class="tip" on:click={reset}>
 		<key>tab</key>
 		- restart test
 	</div>
@@ -191,9 +210,9 @@
 		.typing-test-wrapper {
 			position: relative;
 			width: 50%;
-			height: 100px;
-			overflow: hidden;
+			height: 124px;
 			pointer-events: none;
+			overflow: hidden;
 
 			@media screen and (max-width: 1500px) {
 				width: 60%;
@@ -221,6 +240,38 @@
 				cursor: default;
 			}
 
+			.progress-bar {
+				position: absolute;
+				bottom: 0;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 100%;
+				height: 1px;
+				background: var(--border);
+				z-index: 2;
+
+				.progress {
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 64%;
+					height: 100%;
+					background: var(--text);
+				}
+
+				p {
+					position: absolute;
+					bottom: 3px;
+					left: 0;
+					z-index: 2;
+					font-size: 14px;
+
+					@media screen and (max-width: 500px) {
+						font-size: 12px;
+					}
+				}
+			}
+
 			&::after {
 				content: "";
 				position: absolute;
@@ -231,7 +282,7 @@
 				height: 0; 
 				border-left: 5px solid transparent;
 				border-right: 5px solid transparent;
-				border-bottom: 5px solid var(--second-text);
+				border-bottom: 5px solid var(--text);
 			}
 
 			.fade {
@@ -260,7 +311,7 @@
 				position: absolute;
 				top: 50%;
 				transform: translateY(-50%);
-	
+		
 				.char {
 					color: var(--text);
 					font-size: 20px;
@@ -291,10 +342,14 @@
 			justify-content: center;
 		}
 
-		.tips {
+		.tip {
 			position: fixed;
 			bottom: 80px;
 			font-size: 15px;
+			cursor: pointer;
+			user-select: none;
+			-moz-user-select: none;
+			-webkit-user-select: none;
 
 			@media screen and (max-width: 1500px) {
 				font-size: 14px;

@@ -17,7 +17,7 @@
 
 <style lang='scss'>
 	.wrapper {
-		margin: 12px 10px;
+		margin: 38px 10px;
 		width: 100px;
 		display: flex;
 		flex-direction: column;
@@ -25,12 +25,12 @@
 		
 		@media screen and (max-width: 1500px) {
 			width: 90px;
-			margin: 12px 9px;
+			margin: 24px 9px;
 		}
 
 		@media screen and (max-width: 1000px) {
 			width: 80px;
-			margin: 12px 8px;
+			margin: 24px 8px;
 
 		}
 		

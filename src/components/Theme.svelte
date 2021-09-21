@@ -1,5 +1,5 @@
 <script lang='ts'>
-	let theme = "light"
+	let theme = "dark"
 	theme = localStorage.getItem("theme")
 	
 	function toggleTheme() {

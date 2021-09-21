@@ -15,7 +15,7 @@
 		--text: #151515;
 		--second-text: #59595a;
 		--error-text: 235, 87, 87;
-		--border: #e4e4e4;
+		--border: #c9c9c9;
 	}
 
 	:global([data-theme="dark"]) {
@@ -24,7 +24,7 @@
 		--text: #ffffff;
 		--second-text: #adadad;
 		--error-text: 235, 87, 87;
-		--border: #333333;
+		--border: #4d4d4d;
 	}
 
 	:global(*) {
