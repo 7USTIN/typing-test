@@ -19,7 +19,7 @@
 	let wordIdx = 0
 	let progress = 0
 
-	let words: char[][] = getRandomWords(2)
+	let words: char[][] = getRandomWords(20)
 
 	let stats = {
 		time: { name: "time", value: 0, stop: true },

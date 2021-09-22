@@ -17,7 +17,7 @@
 
 <style lang='scss'>
 	.wrapper {
-		margin: 38px 10px;
+		margin: 38px 10px 0 10px;
 		width: 100px;
 		display: flex;
 		flex-direction: column;

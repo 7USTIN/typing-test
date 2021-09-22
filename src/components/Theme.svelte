@@ -2,7 +2,7 @@
 	let theme = "dark"
 	theme = localStorage.getItem("theme")
 	
-	function toggleTheme() {
+	function toggleTheme(): void {
 		theme = theme === "dark" ? "light" : "dark"
 		localStorage.setItem("theme", theme)
 	}
@@ -51,7 +51,6 @@
 				
 				@media screen and (min-width: 1000px) {
 					font-size: 26px;
-					padding: 10px; 
 				}
 			}
 

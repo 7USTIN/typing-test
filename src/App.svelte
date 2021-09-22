@@ -1,11 +1,13 @@
 <script lang="ts">
 	import Theme from "./components/Theme.svelte"
 	import TypingTest from "./components/TypingTest.svelte"
+	import Settings from "./components/Settings.svelte"
 </script>
 
 <main>
 	<Theme />
 	<TypingTest />
+	<Settings />
 </main>
 
 <style style="scss">
