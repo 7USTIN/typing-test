@@ -6,9 +6,6 @@
 	function toggleModal(): void {
 		showModal = !showModal
 	}
-
-	// STYLE
-	// RESPONSIVE
 </script>
 
 <section>
@@ -25,6 +22,10 @@
 					<button on:click={toggleModal}>
 						<i class="material-icons">close</i>
 					</button>
+				</div>
+
+				<div class="settings">
+					
 				</div>
 			</div>
 		</div>
@@ -132,7 +133,7 @@
 
 					h2 {
 						font-size: 21px;
-						
+
 						@media screen and (max-width: 500px) {
 							font-size: 20px;
 						}
