@@ -1,8 +1,8 @@
 <script lang='ts'>
-	import { onMount, tick } from "svelte"
 	import Statistic from "./Statistic.svelte"
-	import english from "../languages/englishWords"
-
+	import { language, wordRange, upToDate } from "../utils/stores"
+	import { onMount, tick } from "svelte"
+ 
 	interface char {
 		char: string,
 		hit: boolean,
@@ -57,7 +57,7 @@
 		const words = []
 
 		for (let i = 0; i < numWords; i++) {
-			words.push(english.TOP_200[english.TOP_200.length * Math.random() | 0])
+			words.push($language[$wordRange][$language[$wordRange].length * Math.random() | 0])
 		}
 
 		for (let i = 0; i < numWords; i++) {
@@ -108,6 +108,11 @@
 
 		charOffset = currentChar[0].scrollWidth / 2
 		setOffset()
+	}
+
+	$: if (!$upToDate) {
+		$upToDate = true
+		reset()
 	}
 
 	function handleKeydown(e: KeyboardEvent): void {	

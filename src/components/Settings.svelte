@@ -1,10 +1,25 @@
 <script lang='ts'>
-    import { fade } from "svelte/transition"
+	import { fade } from "svelte/transition"
+	import { allLanguages, language, wordRange, upToDate } from "../utils/stores"
 
 	let showModal = true
 
 	function toggleModal(): void {
 		showModal = !showModal
+	}
+
+	function setLanguage(key: string): void {
+		if ($language !== allLanguages[key]) {
+			$language = allLanguages[key]
+			$upToDate = false
+		}
+	}
+
+	function setWordRange(range: string): void {
+		if ($wordRange !== range) {
+			$wordRange = range
+			$upToDate = false
+		}
 	}
 </script>
 
@@ -25,7 +40,21 @@
 				</div>
 
 				<div class="settings">
-					
+					<div class="languages">
+						{#each Object.keys(allLanguages) as lang}
+							<button on:click={() => setLanguage(lang)}>
+								{lang}
+							</button>
+						{/each}
+					</div>
+
+					<div class="word-ranges">
+						{#each ["TOP_200", "TOP_1000"] as range}
+							<button on:click={() => setWordRange(range)}>
+								{range.split("_").join(" ")}
+							</button>
+						{/each}
+					</div>
 				</div>
 			</div>
 		</div>
