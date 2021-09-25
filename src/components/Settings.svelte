@@ -41,19 +41,39 @@
 
 				<div class="settings">
 					<div class="languages">
-						{#each Object.keys(allLanguages) as lang}
-							<button on:click={() => setLanguage(lang)}>
-								{lang}
-							</button>
-						{/each}
+						<div class="header">
+							<h1>Language</h1>
+							<div class="line" />
+						</div>
+
+						<div class="row">
+							{#each Object.keys(allLanguages) as key}
+								<button 
+									class:selected={key === $language.name} 
+									on:click={() => setLanguage(key)}
+								>
+									{key}
+								</button>
+							{/each}
+						</div>
 					</div>
 
 					<div class="word-ranges">
-						{#each ["TOP_200", "TOP_1000"] as range}
-							<button on:click={() => setWordRange(range)}>
-								{range.split("_").join(" ")}
-							</button>
-						{/each}
+						<div class="header">
+							<h1>Word Range</h1>
+							<div class="line" />
+						</div>
+
+						<div class="row">
+							{#each ["TOP_200", "TOP_1000"] as range}
+								<button
+									class:selected={range === $wordRange}
+									on:click={() => setWordRange(range)}
+								>
+									{range.split("_").join(" ").toLowerCase()}
+								</button>
+							{/each}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -110,7 +130,7 @@
 				position: absolute;
 				top: 0;
 				left: 0;
-				width: 20%;
+				width: 22.5%;
 				height: 100%;
 				background: var(--bg);
 				cursor: initial;
@@ -133,7 +153,7 @@
 
 				.header {
 					width: 100%;
-					height: 7.5%;
+					height: 10%;
 					display: flex;
 					align-items: center;
 					justify-content: space-between;
@@ -165,6 +185,75 @@
 
 						@media screen and (max-width: 500px) {
 							font-size: 20px;
+						}
+					}
+				}
+
+				.settings {
+					.languages, .word-ranges {
+						.header {
+							display: flex;
+							flex-wrap: nowrap;
+							align-items: center;
+							white-space: nowrap;
+							justify-content: center;
+							margin-bottom: 12px;
+
+							h1 {
+								font-size: 20px;
+								font-weight: 500;
+								margin-right: 16px;
+							}
+	
+							.line {
+								width: 100%;
+								height: 1px;
+								background: var(--border);
+							}
+						}
+						
+						.row {
+							display: flex;
+							flex-wrap: wrap;
+							margin-bottom: 24px;
+
+							button {
+								font-weight: 400;
+								text-transform: capitalize;
+								cursor: pointer;
+								padding: 4px;
+								color: var(--second-text);
+								background: var(--second-bg);
+								border: 1px solid var(--border);
+								border-radius: 6px;
+								margin: 0 8px 8px 0;
+								width: 30%;
+								min-width: 70px;
+								white-space: nowrap;
+								transition: 150ms;
+	
+								&:hover {
+									border: 1px solid var(--second-text);
+								}
+	
+								@media screen and (max-width: 1000px) {
+									font-size: 13px;
+								}
+							}
+	
+							.selected {
+								color: var(--text);
+								border: 1px solid var(--second-text);
+								font-weight: 500;
+							}
+						}
+					}
+
+					.word-ranges {
+						.row {
+							button {
+								min-width: 80px;
+							}
 						}
 					}
 				}

@@ -6,7 +6,13 @@ import * as spanish from "../languages/spanishWords.json";
 
 import { writable } from "svelte/store";
 
+interface language {
+	name: string;
+	TOP_200: string[];
+	TOP_1000: string[];
+}
+
 export const allLanguages = { english, german, french, italian, spanish };
-export const language = writable(english);
-export const wordRange = writable("TOP_200");
-export const upToDate = writable(true);
+export const language = writable<language>(english);
+export const wordRange = writable<string>("TOP_200");
+export const upToDate = writable<boolean>(true);
