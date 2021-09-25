@@ -1,5 +1,5 @@
-const english = {
-	TOP_200: [
+{
+	"TOP_200": [
 		"the",
 		"be",
 		"of",
@@ -199,9 +199,9 @@ const english = {
 		"course",
 		"change",
 		"help",
-		"line",
+		"line"
 	],
-	TOP_1000: [
+	"TOP_1000": [
 		"the",
 		"of",
 		"to",
@@ -1200,8 +1200,6 @@ const english = {
 		"quotient",
 		"teeth",
 		"shell",
-		"neck",
-	],
-};
-
-export default english;
+		"neck"
+	]
+}

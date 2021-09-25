@@ -1,5 +1,5 @@
-const italian = {
-	TOP_200: [
+{
+	"TOP_200": [
 		"come",
 		"io",
 		"nostro",
@@ -199,9 +199,9 @@ const italian = {
 		"sognare",
 		"divano",
 		"arrogante",
-		"ballare",
+		"ballare"
 	],
-	TOP_1000: [
+	"TOP_1000": [
 		"cosa",
 		"anno",
 		"uomo",
@@ -1374,8 +1374,6 @@ const italian = {
 		"chissà",
 		"sino",
 		"ognuno",
-		"entro",
-	],
-};
-
-export default italian;
+		"entro"
+	]
+}

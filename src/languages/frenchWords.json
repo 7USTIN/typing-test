@@ -1,5 +1,5 @@
-const french = {
-	TOP_200: [
+{
+	"TOP_200": [
 		"comme",
 		"je",
 		"son",
@@ -198,9 +198,9 @@ const french = {
 		"côté",
 		"été",
 		"maintenant",
-		"trouver",
+		"trouver"
 	],
-	TOP_1000: [
+	"TOP_1000": [
 		"a",
 		"à",
 		"à partir de",
@@ -1598,8 +1598,6 @@ const french = {
 		"vraiment",
 		"vue",
 		"y",
-		"yeux",
-	],
-};
-
-export default french;
+		"yeux"
+	]
+}

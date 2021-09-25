@@ -1,5 +1,5 @@
-const german = {
-	TOP_200: [
+{
+	"TOP_200": [
 		"der",
 		"die",
 		"und",
@@ -199,9 +199,9 @@ const german = {
 		"Leben",
 		"Welt",
 		"konnte",
-		"ihrem",
+		"ihrem"
 	],
-	TOP_1000: [
+	"TOP_1000": [
 		"der",
 		"die",
 		"und",
@@ -1199,8 +1199,6 @@ const german = {
 		"deutscher",
 		"Worten",
 		"Ihnen",
-		"voll",
-	],
-};
-
-export default german;
+		"voll"
+	]
+}

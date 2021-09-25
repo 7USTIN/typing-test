@@ -1,5 +1,5 @@
-const spanish = {
-	TOP_200: [
+{
+	"TOP_200": [
 		"como",
 		"su",
 		"que",
@@ -199,9 +199,9 @@ const spanish = {
 		"ahora",
 		"encontrar",
 		"pues",
-		"bien",
+		"bien"
 	],
-	TOP_1000: [
+	"TOP_1000": [
 		"de",
 		"la",
 		"que",
@@ -1201,8 +1201,6 @@ const spanish = {
 		"somos",
 		"términos",
 		"premio",
-		"tercera",
-	],
-};
-
-export default spanish;
+		"tercera"
+	]
+}
