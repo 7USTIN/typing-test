@@ -16,4 +16,7 @@ export const allLanguages = { english, german, french, italian, spanish };
 export const language = writable<language>(english);
 export const wordRange = writable<string>("TOP_200");
 export const capitalize = writable<number>(0);
+export const modus = writable<string>("time");
+export const time = writable<number>(30);
+export const wordCount = writable<number>(50);
 export const upToDate = writable<boolean>(true);
