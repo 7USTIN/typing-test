@@ -65,7 +65,7 @@
 						</div>
 
 						<div class="row">
-							{#each ["TOP_200", "TOP_1000"] as range}
+							{#each ["TOP_25", "TOP_200", "TOP_1000"] as range}
 								<button
 									class:selected={range === $wordRange}
 									on:click={() => setWordRange(range)}
