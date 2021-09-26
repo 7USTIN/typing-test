@@ -9,13 +9,6 @@
 		showModal = !showModal
 	}
 
-	function updateSettings(key, value): void {
-		$settings[key] = value
-		$upToDate = false
-
-		localStorage.setItem("settings", JSON.stringify($settings))
-	}
-
 	$settings = JSON.parse(localStorage.getItem("settings"))
 </script>
 
@@ -36,78 +29,50 @@
 				</div>
 
 				<div class="settings">
-					<Option name="Language">
-						{#each Object.keys(allLanguages) as option}
-							<button 
-								class:selected={option === $settings.language.name} 
-								on:click={() => updateSettings("language", allLanguages[option])}
-								style="min-width: 70px"
-							>
-								{option}
-							</button>
-						{/each}
-					</Option>
+					<Option
+						name="Language" 
+						options={Object.values(allLanguages)}  
+						settingsKey="language"
+						minWidth={70}
+					/>
 
-					<Option name="Word Range">
-						{#each ["TOP_25", "TOP_200", "TOP_1000"] as option}
-							<button
-								class:selected={option === $settings.wordRange}
-								on:click={() => updateSettings("wordRange", option)}
-								style="min-width: 80px"
-							>
-								{option.split("_").join(" ").toLowerCase()}
-							</button>
-						{/each}
-					</Option>
+					<Option 
+						name="Word Range"
+						options={["TOP_25", "TOP_200", "TOP_1000"]}
+						settingsKey="wordRange"
+						minWidth={80}
+					/>
 
-					<Option name="Capitalization">
-						{#each [0, 25, 50, 75, 100] as option}
-							<button
-								class:selected={option === $settings.capitalize}
-								on:click={() => updateSettings("capitalize", option)}
-								style="min-width: 45px;"
-							>
-								{option}%
-							</button>
-						{/each}
-					</Option>
+					<Option 
+						name="Capitalization"
+						options={[0, 25, 50, 75, 100]}
+						settingsKey="capitalize"
+						minWidth={45}
+						optionUnit="%"
+					/>
 
-					<Option name="Modus"> 
-						{#each ["time", "words"] as option} 
-							<button
-								class:selected={option === $settings.modus}
-								on:click={() => updateSettings("modus", option)}
-								style="min-width: 60px;"
-							>
-								{option}
-							</button>
-						{/each}
-					</Option>
+					<Option 
+						name="Modus"
+						options={["time", "words"]}
+						settingsKey="modus"
+						minWidth={60}
+					/>
 
 					{#if $settings.modus === "time"}
-						<Option name="Time">
-							{#each [15, 30, 60, 120, 240, 360] as option}
-								<button
-									class:selected={option === $settings.time}
-									on:click={() => updateSettings("time", option)}
-									style="min-width: 45px;"
-								>
-									{option}s
-								</button>
-							{/each}
-						</Option>
+						<Option 
+							name="Time"
+							options={[15, 30, 60, 120, 240, 360]}
+							settingsKey="time"
+							minWidth={45}
+							optionUnit="s"
+						/>
 					{:else}
-						<Option name="Word Count">
-							{#each [10, 25, 50, 100, 200, 300] as option}
-								<button
-									class:selected={option === $settings.wordCount}
-									on:click={() => updateSettings("wordCount", option)}
-									style="min-width: 45px;"
-								>
-									{option}
-								</button>
-							{/each}
-						</Option>
+						<Option
+							name="Word Count"
+							options={[10, 25, 50, 100, 200, 300]} 
+							settingsKey="wordCount"
+							minWidth={45}
+						/>
 					{/if}
 				</div>
 			</div>
@@ -226,37 +191,6 @@
 						@media screen and (max-width: 500px) {
 							font-size: 20px;
 						}
-					}
-				}
-
-				.settings {
-					button {
-						font-weight: 400;
-						text-transform: capitalize;
-						cursor: pointer;
-						padding: 4px;
-						color: var(--second-text);
-						background: var(--second-bg);
-						border: 1px solid var(--border);
-						border-radius: 6px;
-						margin: 0 8px 8px 0;
-						width: 30%;
-						white-space: nowrap;
-						transition: 150ms;
-
-						&:hover {
-							border: 1px solid var(--second-text);
-						}
-
-						@media screen and (max-width: 1000px) {
-							font-size: 13px;
-						}
-					}
-
-					.selected {
-						color: var(--text);
-						border: 1px solid var(--second-text);
-						font-weight: 500;
 					}
 				}
 			}
