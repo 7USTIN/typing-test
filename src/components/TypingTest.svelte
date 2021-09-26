@@ -1,6 +1,6 @@
 <script lang='ts'>
 	import Statistic from "./Statistic.svelte"
-	import { language, wordRange, capitalize, upToDate } from "../utils/stores"
+	import { settings, upToDate } from "../utils/stores"
 	import { onMount, tick } from "svelte"
  
 	interface char {
@@ -53,11 +53,13 @@
 	}
 
 	function getRandomWords(numWords: number): [][] {
+		const { language, wordRange, capitalize } = $settings
+
 		const array = []
 		const words = []
 
 		for (let i = 0; i < numWords; i++) {
-			words.push($language[$wordRange][$language[$wordRange].length * Math.random() | 0])
+			words.push(language[wordRange][language[wordRange].length * Math.random() | 0])
 		}
 
 		for (let i = 0; i < numWords; i++) {
@@ -75,7 +77,7 @@
 				})
 			}
 
-			if (Math.random() < $capitalize / 100) {
+			if (Math.random() < capitalize / 100) {
 				array[i][0].char = array[i][0].char.toUpperCase()
 			}
 

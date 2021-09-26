@@ -1,9 +1,7 @@
 <script lang='ts'>
 	import Option from "./Option.svelte"
 	import { fade } from "svelte/transition"
-	import { 
-		allLanguages, language, wordRange, capitalize, modus, time, upToDate, wordCount 
-	} from "../utils/stores"
+	import { allLanguages, settings, upToDate } from "../utils/stores"
 
 	let showModal = true
 
@@ -11,10 +9,14 @@
 		showModal = !showModal
 	}
 
-	function updateSettings(store, value): void {
-		store.set(value)
+	function updateSettings(key, value): void {
+		$settings[key] = value
 		$upToDate = false
+
+		localStorage.setItem("settings", JSON.stringify($settings))
 	}
+
+	$settings = JSON.parse(localStorage.getItem("settings"))
 </script>
 
 <section>
@@ -37,8 +39,8 @@
 					<Option name="Language">
 						{#each Object.keys(allLanguages) as option}
 							<button 
-								class:selected={option === $language.name} 
-								on:click={() => updateSettings(language, allLanguages[option])}
+								class:selected={option === $settings.language.name} 
+								on:click={() => updateSettings("language", allLanguages[option])}
 								style="min-width: 70px"
 							>
 								{option}
@@ -49,8 +51,8 @@
 					<Option name="Word Range">
 						{#each ["TOP_25", "TOP_200", "TOP_1000"] as option}
 							<button
-								class:selected={option === $wordRange}
-								on:click={() => updateSettings(wordRange, option)}
+								class:selected={option === $settings.wordRange}
+								on:click={() => updateSettings("wordRange", option)}
 								style="min-width: 80px"
 							>
 								{option.split("_").join(" ").toLowerCase()}
@@ -61,8 +63,8 @@
 					<Option name="Capitalization">
 						{#each [0, 25, 50, 75, 100] as option}
 							<button
-								class:selected={option === $capitalize}
-								on:click={() => updateSettings(capitalize, option)}
+								class:selected={option === $settings.capitalize}
+								on:click={() => updateSettings("capitalize", option)}
 								style="min-width: 45px;"
 							>
 								{option}%
@@ -73,8 +75,8 @@
 					<Option name="Modus"> 
 						{#each ["time", "words"] as option} 
 							<button
-								class:selected={option === $modus}
-								on:click={() => updateSettings(modus, option)}
+								class:selected={option === $settings.modus}
+								on:click={() => updateSettings("modus", option)}
 								style="min-width: 60px;"
 							>
 								{option}
@@ -82,24 +84,24 @@
 						{/each}
 					</Option>
 
-					{#if $modus === "time"}
+					{#if $settings.modus === "time"}
 						<Option name="Time">
-							{#each [15, 30, 60, 120] as option}
+							{#each [15, 30, 60, 120, 240, 360] as option}
 								<button
-									class:selected={option === $time}
-									on:click={() => updateSettings(time, option)}
+									class:selected={option === $settings.time}
+									on:click={() => updateSettings("time", option)}
 									style="min-width: 45px;"
 								>
-									{option}
+									{option}s
 								</button>
 							{/each}
 						</Option>
 					{:else}
 						<Option name="Word Count">
-							{#each [10, 25, 50, 100] as option}
+							{#each [10, 25, 50, 100, 200, 300] as option}
 								<button
-									class:selected={option === $wordCount}
-									on:click={() => updateSettings(wordCount, option)}
+									class:selected={option === $settings.wordCount}
+									on:click={() => updateSettings("wordCount", option)}
 									style="min-width: 45px;"
 								>
 									{option}
@@ -167,6 +169,7 @@
 				background: var(--bg);
 				cursor: initial;
 				padding: 0 32px;
+				overflow: auto;
 				
 				@media screen and (max-width: 1500px) {
 					padding: 0 24px;
