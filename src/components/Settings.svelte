@@ -1,6 +1,7 @@
 <script lang='ts'>
+	import Option from "./Option.svelte"
+	import { allLanguages, language, wordRange, upToDate, capitalize } from "../utils/stores"
 	import { fade } from "svelte/transition"
-	import { allLanguages, language, wordRange, upToDate } from "../utils/stores"
 
 	let showModal = true
 
@@ -8,18 +9,9 @@
 		showModal = !showModal
 	}
 
-	function setLanguage(key: string): void {
-		if ($language !== allLanguages[key]) {
-			$language = allLanguages[key]
-			$upToDate = false
-		}
-	}
-
-	function setWordRange(range: string): void {
-		if ($wordRange !== range) {
-			$wordRange = range
-			$upToDate = false
-		}
+	function setStore(store, value): void {
+		store.set(value)
+		$upToDate = false
 	}
 </script>
 
@@ -40,41 +32,41 @@
 				</div>
 
 				<div class="settings">
-					<div class="languages">
-						<div class="header">
-							<h1>Language</h1>
-							<div class="line" />
-						</div>
+					<Option name="Language">
+						{#each Object.keys(allLanguages) as key}
+							<button 
+								class:selected={key === $language.name} 
+								on:click={() => setStore(language, allLanguages[key])}
+								style="min-width: 70px"
+							>
+								{key}
+							</button>
+						{/each}
+					</Option>
 
-						<div class="row">
-							{#each Object.keys(allLanguages) as key}
-								<button 
-									class:selected={key === $language.name} 
-									on:click={() => setLanguage(key)}
-								>
-									{key}
-								</button>
-							{/each}
-						</div>
-					</div>
+					<Option name="Word Range">
+						{#each ["TOP_25", "TOP_200", "TOP_1000"] as range}
+							<button
+								class:selected={range === $wordRange}
+								on:click={() => setStore(wordRange, range)}
+								style="min-width: 80px"
+							>
+								{range.split("_").join(" ").toLowerCase()}
+							</button>
+						{/each}
+					</Option>
 
-					<div class="word-ranges">
-						<div class="header">
-							<h1>Word Range</h1>
-							<div class="line" />
-						</div>
-
-						<div class="row">
-							{#each ["TOP_25", "TOP_200", "TOP_1000"] as range}
-								<button
-									class:selected={range === $wordRange}
-									on:click={() => setWordRange(range)}
-								>
-									{range.split("_").join(" ").toLowerCase()}
-								</button>
-							{/each}
-						</div>
-					</div>
+					<Option name="Capitalization">
+						{#each [0, 25, 50, 75, 100] as percent}
+							<button
+								class:selected={percent === $capitalize}
+								on:click={() => setStore(capitalize, percent)}
+								style="width: 17%; min-width: 45px;"
+							>
+								{percent}%
+							</button>
+						{/each}
+					</Option>
 				</div>
 			</div>
 		</div>
@@ -101,7 +93,7 @@
 			border-radius: 9999px;
 			cursor: pointer;
 			transition: 150ms;
-			
+
 			i {
 				font-size: 24px;
 				padding: 10px; 
@@ -190,71 +182,33 @@
 				}
 
 				.settings {
-					.languages, .word-ranges {
-						.header {
-							display: flex;
-							flex-wrap: nowrap;
-							align-items: center;
-							white-space: nowrap;
-							justify-content: center;
-							margin-bottom: 12px;
+					button {
+						font-weight: 400;
+						text-transform: capitalize;
+						cursor: pointer;
+						padding: 4px;
+						color: var(--second-text);
+						background: var(--second-bg);
+						border: 1px solid var(--border);
+						border-radius: 6px;
+						margin: 0 8px 8px 0;
+						width: 30%;
+						white-space: nowrap;
+						transition: 150ms;
 
-							h1 {
-								font-size: 20px;
-								font-weight: 500;
-								margin-right: 16px;
-							}
-	
-							.line {
-								width: 100%;
-								height: 1px;
-								background: var(--border);
-							}
+						&:hover {
+							border: 1px solid var(--second-text);
 						}
-						
-						.row {
-							display: flex;
-							flex-wrap: wrap;
-							margin-bottom: 24px;
 
-							button {
-								font-weight: 400;
-								text-transform: capitalize;
-								cursor: pointer;
-								padding: 4px;
-								color: var(--second-text);
-								background: var(--second-bg);
-								border: 1px solid var(--border);
-								border-radius: 6px;
-								margin: 0 8px 8px 0;
-								width: 30%;
-								min-width: 70px;
-								white-space: nowrap;
-								transition: 150ms;
-	
-								&:hover {
-									border: 1px solid var(--second-text);
-								}
-	
-								@media screen and (max-width: 1000px) {
-									font-size: 13px;
-								}
-							}
-	
-							.selected {
-								color: var(--text);
-								border: 1px solid var(--second-text);
-								font-weight: 500;
-							}
+						@media screen and (max-width: 1000px) {
+							font-size: 13px;
 						}
 					}
 
-					.word-ranges {
-						.row {
-							button {
-								min-width: 80px;
-							}
-						}
+					.selected {
+						color: var(--text);
+						border: 1px solid var(--second-text);
+						font-weight: 500;
 					}
 				}
 			}

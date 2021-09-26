@@ -1,6 +1,6 @@
 <script lang='ts'>
 	import Statistic from "./Statistic.svelte"
-	import { language, wordRange, upToDate } from "../utils/stores"
+	import { language, wordRange, capitalize, upToDate } from "../utils/stores"
 	import { onMount, tick } from "svelte"
  
 	interface char {
@@ -73,6 +73,10 @@
 				array[i].push({
 					char: " ", error: false, hit: false, current: false,
 				})
+			}
+
+			if (Math.random() < $capitalize / 100) {
+				array[i][0].char = array[i][0].char.toUpperCase()
 			}
 
 			array[0][0].current = true
