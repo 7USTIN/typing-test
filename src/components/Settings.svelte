@@ -1,7 +1,7 @@
 <script lang='ts'>
 	import Option from "./Option.svelte"
 	import { fade } from "svelte/transition"
-	import { allLanguages, settings, upToDate } from "../utils/stores"
+	import { allLanguages, settings } from "../utils/stores"
 
 	let showModal = true
 

@@ -5,10 +5,10 @@
 	export let options: any[]
 	export let settingsKey: string
 	export let minWidth: number
-	export let optionUnit: string = ""
+	export let optionUnit: string = "";
 
-	function updateSettings(key, value): void {
-		$settings[key] = value
+	function updateSettings(option): void {
+		$settings[settingsKey] = option
 		$upToDate = false
 
 		localStorage.setItem("settings", JSON.stringify($settings))
@@ -28,8 +28,8 @@
 					settingsKey === "language" ? 
 					option.name === $settings[settingsKey].name : 
 					option === $settings[settingsKey]
-				} 
-				on:click={() => updateSettings(settingsKey, option)}
+				}
+				on:click={() => updateSettings(option)}
 				style={`min-width: ${minWidth}px`}
 			>
 				{#if settingsKey === "language"}
