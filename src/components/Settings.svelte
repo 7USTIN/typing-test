@@ -3,7 +3,7 @@
 	import { fade } from "svelte/transition"
 	import { allLanguages, settings } from "../utils/stores"
 
-	let showModal = true
+	let showModal = false
 
 	function toggleModal(): void {
 		showModal = !showModal

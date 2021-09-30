@@ -28,7 +28,7 @@ export const settings = writable<settings>({
 	language: english,
 	wordRange: "TOP_200",
 	capitalize: 0,
-	modus: "time",
+	modus: "words",
 	time: 30,
 	wordCount: 50,
 });

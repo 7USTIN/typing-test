@@ -10,17 +10,6 @@
 		current: boolean
 	}
 
-	let inputEl: HTMLInputElement
-	let typingTestEl: HTMLDivElement
-	let wrapperEl: HTMLDivElement
-	
-	let charOffset = 0
-	let charIdx = 0
-	let wordIdx = 0
-	let progress = 0
-
-	let words: char[][] = getRandomWords(20)
-
 	let stats = {
 		time: { name: "time", value: 0, stop: true },
 		chars: { name: "characters", value: 0 },
@@ -32,7 +21,18 @@
 
 	$: currentChar = document.getElementsByClassName("current")
 	$: stats.wpm.value = !stats.time.value ? 0 : Math.floor((stats.chars.value / 5) / (stats.time.value / 60))
+	$: wordCount = $settings.modus === "words" ? $settings.wordCount : 25
 
+	let inputEl: HTMLInputElement
+	let typingTestEl: HTMLDivElement
+	let wrapperEl: HTMLDivElement
+	let words: char[][] = []
+	
+	let charOffset = 0
+	let charIdx = 0
+	let wordIdx = 0
+	let progress = 0
+	
 	setInterval(() => {
 		if (!stats.time.stop) {
 			stats.time.value++
@@ -40,38 +40,42 @@
 		}
 	}, 1000) 
 
-	onMount(() => {
-		charOffset = currentChar[0].scrollWidth / 2
-		setOffset()
-
+	onMount(async() => {
 		inputEl.addEventListener("paste", (e) => e.preventDefault())
 		inputEl.addEventListener("copy", (e) => e.preventDefault())
+
+		words = getRandomWords(wordCount, true)
+
+		await tick()
+
+		charOffset = currentChar[0].scrollWidth / 2
+		setOffset()
 	})
 	
 	function setOffset(): void {
 		typingTestEl.style.left = wrapperEl.clientWidth / 2 - charOffset + "px"
 	}
 
-	function getRandomWords(numWords: number): [][] {
+	function getRandomWords(numWords: number, start: boolean): [][] {
 		const { language, wordRange, capitalize } = $settings
 
 		const array = []
-		const words = []
+		const randomWords = []
 
 		for (let i = 0; i < numWords; i++) {
-			words.push(language[wordRange][language[wordRange].length * Math.random() | 0])
+			randomWords.push(language[wordRange][language[wordRange].length * Math.random() | 0])
 		}
 
 		for (let i = 0; i < numWords; i++) {
 			array.push([])
 
-			for (let j = 0; j < words[i].length; j++) {
+			for (let j = 0; j < randomWords[i].length; j++) {
 				array[i].push({
-					char: words[i][j], error: false, hit: false, current: false,
+					char: randomWords[i][j], error: false, hit: false, current: false,
 				})
 			}
 			
-			if (i + 1 !== numWords) {
+			if (i + 1 !== numWords || $settings.modus === "time") {
 				array[i].push({
 					char: " ", error: false, hit: false, current: false,
 				})
@@ -79,28 +83,33 @@
 
 			if (Math.random() < capitalize / 100) {
 				array[i][0].char = array[i][0].char.toUpperCase()
+			} else {
+				array[i][0].char = array[i][0].char.toLowerCase()
 			}
 
-			array[0][0].current = true
+			if (start) {
+				array[0][0].current = true
+			}
 		}
 
 		return array
 	}
 
 	function getProgress(): void {
-		// LOGIC HERE
-		
-		if (progress === 100) {
-			charOffset -= currentChar[0]?.scrollWidth || 0
-			setOffset()
-			words[wordIdx][charIdx].current = false
-			stats.time.stop = true
+		if ($settings.modus === "time") {
+			progress = ((stats.time.value / $settings.time) * 100)
+			
+			if ($settings.time === stats.time.value) {
+				stats.time.stop = true
+			}
+		} else if ($settings.modus === "words") {
+
 		}
 	}
 
 	async function reset(): Promise<void> {
 		[charIdx, wordIdx, progress] = [0, 0, 0]
-		words = getRandomWords(20)
+		words = getRandomWords(wordCount, true)
 		
 		stats.time.value = 0
 		stats.time.stop = true
@@ -148,6 +157,13 @@
 			}
 			
 			words[wordIdx][charIdx].current = true
+
+			if (
+				$settings.modus === "time" && 
+				words[Math.floor(words.length / 2)][0].current === true
+			) {
+				words = words.concat(getRandomWords(25, false))
+			}
 		} else {
 			words[wordIdx].splice(charIdx, 0, {
 				char: e.key, error: true, hit: false, current: false,
@@ -187,8 +203,16 @@
 		</div>
 
 		<div class="progress-bar">
-			<div class="progress" />
-			<p>64%</p>
+			<div class="progress" style={`width: ${progress}%`} />
+			<p>
+				{#if !progress}
+					0%
+				{:else if progress === 100}
+					100%
+				{:else}
+					{progress.toFixed(1)}%
+				{/if}
+			</p>
 		</div>
 
 		<div class="fade left" />
@@ -265,7 +289,6 @@
 					position: absolute;
 					top: 0;
 					left: 0;
-					width: 64%;
 					height: 100%;
 					background: var(--text);
 				}
