@@ -32,6 +32,7 @@
 	let charIdx = 0
 	let wordIdx = 0
 	let progress = 0
+	let charCount = 0
 	
 	setInterval(() => {
 		if (!stats.time.stop) {
@@ -73,12 +74,20 @@
 				array[i].push({
 					char: randomWords[i][j], error: false, hit: false, current: false,
 				})
+
+				if ($settings.modus === "words") {
+					charCount++
+				}
 			}
 			
 			if (i + 1 !== numWords || $settings.modus === "time") {
 				array[i].push({
 					char: " ", error: false, hit: false, current: false,
 				})
+
+				if ($settings.modus === "words") {
+					charCount++
+				}
 			}
 
 			if (Math.random() < capitalize / 100) {
@@ -97,18 +106,27 @@
 
 	function getProgress(): void {
 		if ($settings.modus === "time") {
-			progress = ((stats.time.value / $settings.time) * 100)
+			progress = (stats.time.value / $settings.time) * 100
 			
 			if ($settings.time === stats.time.value) {
 				stats.time.stop = true
 			}
 		} else if ($settings.modus === "words") {
+			progress = (stats.chars.value / charCount) * 100
 
+			let lastWord = words[words.length - 1]
+
+			if (lastWord[lastWord.length - 1].hit) {
+				stats.time.stop = true
+				charOffset -= currentChar[0].scrollWidth
+				setOffset()
+				lastWord[lastWord.length - 1].current = false
+			}
 		}
 	}
 
 	async function reset(): Promise<void> {
-		[charIdx, wordIdx, progress] = [0, 0, 0]
+		[charIdx, wordIdx, progress, charCount] = [0, 0, 0, 0]
 		words = getRandomWords(wordCount, true)
 		
 		stats.time.value = 0
