@@ -1,15 +1,18 @@
-<script lang='ts'>
-	import Option from "./Option.svelte"
-	import { fade } from "svelte/transition"
-	import { allLanguages, settings } from "../utils/stores"
+<script lang="ts">
+	import Option from './Option.svelte';
+	import { fade } from 'svelte/transition';
+	import { allLanguages, settings } from '../utils/stores';
 
-	let showModal = false
+	let showModal = false;
+	let settingsLS = localStorage.getItem('settings');
 
 	function toggleModal(): void {
-		showModal = !showModal
+		showModal = !showModal;
 	}
 
-	$settings = JSON.parse(localStorage.getItem("settings"))
+	if (settingsLS) {
+		$settings = JSON.parse(settingsLS);
+	}
 </script>
 
 <section>
@@ -18,9 +21,13 @@
 	</button>
 
 	{#if showModal}
-		<div class="modal-wrapper" on:click|self={toggleModal} transition:fade={{duration: 125}}>
+		<div
+			class="modal-wrapper"
+			on:click|self={toggleModal}
+			transition:fade={{ duration: 125 }}
+		>
 			<div class="modal">
-				<div class="header">					
+				<div class="header">
 					<h2>Settings</h2>
 
 					<button on:click={toggleModal}>
@@ -30,20 +37,20 @@
 
 				<div class="settings">
 					<Option
-						name="Language" 
-						options={Object.values(allLanguages)}  
+						name="Language"
+						options={Object.values(allLanguages)}
 						settingsKey="language"
 						minWidth={70}
 					/>
 
-					<Option 
+					<Option
 						name="Word Range"
-						options={["TOP_25", "TOP_200", "TOP_1000"]}
+						options={['TOP_25', 'TOP_200', 'TOP_1000']}
 						settingsKey="wordRange"
 						minWidth={80}
 					/>
 
-					<Option 
+					<Option
 						name="Capitalization"
 						options={[0, 25, 50, 75, 100]}
 						settingsKey="capitalize"
@@ -51,15 +58,15 @@
 						optionUnit="%"
 					/>
 
-					<Option 
+					<Option
 						name="Modus"
-						options={["time", "words"]}
+						options={['time', 'words']}
 						settingsKey="modus"
 						minWidth={60}
 					/>
 
-					{#if $settings.modus === "time"}
-						<Option 
+					{#if $settings.modus === 'time'}
+						<Option
 							name="Time"
 							options={[15, 30, 60, 120, 240, 360]}
 							settingsKey="time"
@@ -69,7 +76,7 @@
 					{:else}
 						<Option
 							name="Word Count"
-							options={[10, 25, 50, 100, 200, 300]} 
+							options={[10, 25, 50, 100, 200, 300]}
 							settingsKey="wordCount"
 							minWidth={45}
 						/>
@@ -80,7 +87,7 @@
 	{/if}
 </section>
 
-<style lang='scss'>
+<style lang="scss">
 	section {
 		position: absolute;
 		top: 24px;
@@ -103,8 +110,8 @@
 
 			i {
 				font-size: 24px;
-				padding: 10px; 
-				
+				padding: 10px;
+
 				@media screen and (min-width: 1000px) {
 					font-size: 26px;
 				}
@@ -135,17 +142,17 @@
 				cursor: initial;
 				padding: 0 32px;
 				overflow: auto;
-				
+
 				@media screen and (max-width: 1500px) {
 					padding: 0 24px;
 					width: 30%;
 				}
-				
+
 				@media screen and (max-width: 1000px) {
 					padding: 0 16px;
 					width: 50%;
 				}
-				
+
 				@media screen and (max-width: 500px) {
 					width: 80%;
 					padding: 0 12px;
@@ -170,11 +177,11 @@
 						transition: 150ms;
 						background: transparent;
 						margin-top: 2px;
-						
+
 						i {
 							font-size: 24px;
-							padding: 6px; 
-							
+							padding: 6px;
+
 							@media screen and (min-width: 1000px) {
 								font-size: 26px;
 							}
