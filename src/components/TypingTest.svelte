@@ -256,7 +256,8 @@
 		<div class="fade left" />
 		<div class="fade right" />
 
-		<input bind:this={inputEl} />
+		<input id="input" bind:this={inputEl} />
+		<label for="input">input</label>
 	</div>
 
 	<div class="stats">
@@ -311,6 +312,15 @@
 				left: 0;
 				pointer-events: auto;
 				cursor: default;
+			}
+
+			label {
+				opacity: 0;
+				user-select: none;
+				-moz-user-select: none;
+				-webkit-user-select: none;
+				color: transparent;
+				z-index: -3;
 			}
 
 			.progress-bar {

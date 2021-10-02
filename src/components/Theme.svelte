@@ -1,30 +1,34 @@
-<script lang='ts'>
-	let theme = "dark"
-	theme = localStorage.getItem("theme")
-	
+<script lang="ts">
+	let theme = 'dark';
+	theme = localStorage.getItem('theme');
+
 	function toggleTheme(): void {
-		theme = theme === "dark" ? "light" : "dark"
-		localStorage.setItem("theme", theme)
+		theme = theme === 'dark' ? 'light' : 'dark';
+		localStorage.setItem('theme', theme);
 	}
-	
-	$: document.body.setAttribute("data-theme", theme)
+
+	$: document.body.setAttribute('data-theme', theme);
 </script>
 
 <section>
 	<button on:click={toggleTheme}>
 		<i class="material-icons">
-			{theme === "dark" ? "light_mode" : "dark_mode"}
+			{theme === 'dark' ? 'light_mode' : 'dark_mode'}
 		</i>
 	</button>
 
-	<a href="https://github.com/7USTIN/typing-test" target="_blank">
+	<a
+		href="https://github.com/7USTIN/typing-test"
+		target="_blank"
+		rel="noopener"
+	>
 		<button>
 			<i class="material-icons">code</i>
 		</button>
 	</a>
 </section>
 
-<style lang='scss'>
+<style lang="scss">
 	section {
 		position: absolute;
 		top: 24px;
@@ -44,11 +48,11 @@
 			border-radius: 9999px;
 			cursor: pointer;
 			transition: 150ms;
-			
+
 			i {
 				font-size: 24px;
-				padding: 10px; 
-				
+				padding: 10px;
+
 				@media screen and (min-width: 1000px) {
 					font-size: 26px;
 				}
